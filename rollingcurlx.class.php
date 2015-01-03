@@ -2,6 +2,7 @@
 /*
 **  cURL-Multi wrapper class
 **  a fork of Rolling Curl (http://code.google.com/p/rolling-curl/)
+**  URL: https://github.com/marcushat/rollingcurlx
 */
 Class RollingCurlX {
     private $_maxConcurrent = 0; //max. number of simultaneous connections allowed
@@ -99,16 +100,18 @@ Class RollingCurlX {
             while($completed = curl_multi_info_read($multi_handle)) {
                 $ch = $completed['handle'];
                 $request_info = curl_getinfo($ch);
+                $error = null;
                 if(curl_errno($ch) !== 0 || intval($request_info['http_code']) !== 200) { //if server responded with http error
-                    if(curl_errno($ch) !== 0) {
-                        $response = "Err : " . curl_errno($ch);
+                    
+                    $response = false; // no response if there is any error
+
+                    if( curl_errno($ch) !== 0 ) {
+                        $error = "cURL Error Code : " . curl_errno($ch);
                     }
-                    else if ( intval($request_info['http_code'] ) {
-                        $response = "Err : " . "http error 200";
+                    else if( intval($request_info['http_code']) !== 200 ) {
+                        $error = "HTTP Error Code : " . intval($request_info['http_code']);
                     }
-                    else {
-                        $response = false;
-                    }
+                    
 
                 } else { //sucessful response
                     $response = curl_multi_getcontent($ch);
@@ -136,9 +139,11 @@ Class RollingCurlX {
 
                 //call the callback function and pass request info and user data to it
                 if($callback) {
-                    call_user_func($callback, $response, $url, $request_info, $user_data, $time);
+                    call_user_func($callback, $response, $url, $request_info, $user_data, $time, $error);
                 }
                 $request = NULL; //free up memory now just incase response was large
+
+                //usleep(500 *1000); future addon: wait before going next request, prevent error 429
 
                 //add/start a new request to the request queue
                 if($i < count($this->requests) && isset($this->requests[$i])) { //if requests left
