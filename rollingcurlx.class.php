@@ -100,7 +100,16 @@ Class RollingCurlX {
                 $ch = $completed['handle'];
                 $request_info = curl_getinfo($ch);
                 if(curl_errno($ch) !== 0 || intval($request_info['http_code']) !== 200) { //if server responded with http error
-                    $response = false;
+                    if(curl_errno($ch) !== 0) {
+                        $response = "Err : " . curl_errno($ch);
+                    }
+                    else if ( intval($request_info['http_code'] ) {
+                        $response = "Err : " . "http error 200";
+                    }
+                    else {
+                        $response = false;
+                    }
+
                 } else { //sucessful response
                     $response = curl_multi_getcontent($ch);
                 }
