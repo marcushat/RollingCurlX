@@ -15,7 +15,7 @@ Using this class is very easy.
 First initialize class with the maximum number of concurrent requests you want open at a time.
 All requests after this will be queued until one completes.
 ```php
-$RollingCurlX = new RollinCurlX(10);
+$RollingCurlX = new RollingCurlX(10);
 ```
 Next add a request to the queue
 ```php
