@@ -15,7 +15,7 @@ Using this class is very easy.
 First initialize class with the maximum number of concurrent requests you want open at a time.
 All requests after this will be queued until one completes.
 ```php
-$RollingCurlX = new RollinCurlX(10);
+$RCX = new RollinCurlX(10);
 ```
 Next add a request to the queue
 ```php
@@ -24,7 +24,7 @@ $post_data = ['user' => 'bob', 'token' => 'dQw4w9WgXcQ']; //set to NULL if not u
 $user_data = ['foo', $whatever];
 $options = [CURLOPT_FOLLOWLOCATION => false];
 
-$RollingCurlX->addRequest($url, $post_data, 'callback_functn' $user_data, $options, $headers);
+$RCX->addRequest($url, $post_data, 'callback_functn' $user_data, $options, $headers);
 ```
 The callback function should look like this:
 ```php
@@ -36,20 +36,20 @@ function callback_functn($response, $url, $request_info, $user_data, $time) {
 
 Send the requests. Blocks until all requests complete or timeout.
 ```php
-$RollingCurlX->execute();
+$RCX->execute();
 ```
 Thats pretty much it for a simple request. See? Easy. No more need to wait between making multiple api calls.
 
 But there's more if you need it...
 ```php
 //Set a timeout on all requests:
-$RollingCurlX->setTimeout(3000); //in milliseconds
+$RCX->setTimeout(3000); //in milliseconds
 
 //To set options for all requests(will be overridden by individual request options):
 $RollingCurlMulti->setOptions([$curl_options]);
 
 //To do the same with http headers:
-$RollingCurlX->setHeaders(['Content-type: application/xml', 'Authorization: gfhjui']);
+$RCX->setHeaders(['Content-type: application/xml', 'Authorization: gfhjui']);
 ```
 
 ### Issues
