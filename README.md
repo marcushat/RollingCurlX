@@ -9,6 +9,8 @@ MIT
 #### Version
 0.9.0
 
+for PHP 5.4+
+
 ##How to Use
 Using this class is very easy.
 
@@ -42,9 +44,9 @@ Send the requests. Blocks until all requests complete or timeout.
 $RCX->execute();
 ```
 
-Thats pretty much it for a simple request. See? Easy. No more need to wait between making multiple api calls.
+See? Easy. Thats pretty much it for a simple request.
 
-But there's more if you need it...
+There's more if you need it though...
 ```php
 //Set a timeout on all requests:
 $RCX->setTimeout(3000); //in milliseconds
