@@ -14,13 +14,11 @@ Using this class is very easy.
 
 First initialize class with the maximum number of concurrent requests you want open at a time.
 All requests after this will be queued until one completes.
+
 ```php
-<<<<<<< HEAD
 $RCX = new RollinCurlX(10);
-=======
-$RollingCurlX = new RollingCurlX(10);
->>>>>>> origin/master
 ```
+
 Next add a request to the queue
 ```php
 $url = 'http://www.google.com/search?q=apples';
@@ -30,6 +28,7 @@ $options = [CURLOPT_FOLLOWLOCATION => false];
 
 $RCX->addRequest($url, $post_data, 'callback_functn' $user_data, $options, $headers);
 ```
+
 The callback function should look like this:
 ```php
 function callback_functn($response, $url, $request_info, $user_data, $time) {
@@ -42,6 +41,7 @@ Send the requests. Blocks until all requests complete or timeout.
 ```php
 $RCX->execute();
 ```
+
 Thats pretty much it for a simple request. See? Easy. No more need to wait between making multiple api calls.
 
 But there's more if you need it...
