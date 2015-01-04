@@ -50,7 +50,7 @@ But there's more if you need it...
 $RCX->setTimeout(3000); //in milliseconds
 
 //To set options for all requests(will be overridden by individual request options):
-$RollingCurlMulti->setOptions([$curl_options]);
+$RCX->setOptions([$curl_options]);
 
 //To do the same with http headers:
 $RCX->setHeaders(['Content-type: application/xml', 'Authorization: gfhjui']);
