@@ -1,6 +1,8 @@
 <?php
 /*
-**  cURL-Multi wrapper class
+**  RollingCurlX - cURL-Multi wrapper class
+**  URL: http://github.com/marcushat/RollingCurlX
+**
 **  a fork of Rolling Curl (http://code.google.com/p/rolling-curl/)
 */
 Class RollingCurlX {
