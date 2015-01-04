@@ -5,11 +5,11 @@
 */
 Class RollingCurlX {
     private $_maxConcurrent = 0; //max. number of simultaneous connections allowed
-    private $_options = []; //shared cURL options
-    private $_headers = []; //shared cURL request headers
+    private $_options = array(); //shared cURL options
+    private $_headers = array(); //shared cURL request headers
     private $_callback = NULL; //default callback
     private $_timeout = 5000; //timeout used for curl_multi_select function
-    private $requests = []; //request_queue
+    private $requests = array(); //request_queue
 
     function __construct($max_concurrent = 10) {
         $this->setMaxConcurrent($max_concurrent);
@@ -31,7 +31,7 @@ Class RollingCurlX {
         }
     }
 
-    public function setCallback(callable $callback) {
+    public function setCallback($callback) {
         $this->_callback = $callback;
     }
 
@@ -45,25 +45,25 @@ Class RollingCurlX {
     public function addRequest(
                         $url,
                         array $post_data = NULL,
-                        callable $callback = NULL, //individual callback
+                        $callback = NULL, //individual callback
                         $user_data = NULL,
                         array $options = NULL, //individual cURL options
                         array $headers = NULL //individual cURL request headers
     ) { //Add to request queue
-        $this->requests[] = [
+        $this->requests[] = array(
             'url' => $url,
             'post_data' => ($post_data) ? $post_data : NULL,
             'callback' => ($callback) ? $callback : $this->_callback,
             'user_data' => ($user_data) ? $user_data : NULL,
             'options' => ($options) ? $options : NULL,
             'headers' => ($headers) ? $headers : NULL
-        ];
+        );
         return count($this->requests) - 1; //return request number/index
     }
 
     //Reset request queue
     public function reset() {
-        $this->requests = [];
+        $this->requests = array();
     }
 
     //Execute the request queue
@@ -72,7 +72,7 @@ Class RollingCurlX {
             $this->_maxConcurrent = count($this->requests);
         }
         //the request map that maps the request queue to request curl handles
-        $requests_map = [];
+        $requests_map = array();
         $multi_handle = curl_multi_init();
         //start processing the initial request queue
         for($i = 0; $i < $this->_maxConcurrent; $i++) {
