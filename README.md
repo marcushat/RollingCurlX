@@ -18,7 +18,7 @@ First initialize class with the maximum number of concurrent requests you want o
 All requests after this will be queued until one completes.
 
 ```php
-$RCX = new RollinCurlX(10);
+$RCX = new RollingCurlX(10);
 ```
 
 Next add a request to the queue
