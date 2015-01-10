@@ -46,7 +46,7 @@ Class RollingCurlX {
     //Add a request to the request queue
     public function addRequest(
                         $url,
-                        array $post_data = NULL,
+                        $post_data = NULL,
                         callable $callback = NULL, //individual callback
                         $user_data = NULL,
                         array $options = NULL, //individual cURL options
