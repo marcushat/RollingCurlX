@@ -33,9 +33,16 @@ $RCX->addRequest($url, $post_data, 'callback_functn' $user_data, $options, $head
 
 The callback function should look like this:
 ```php
-function callback_functn($response, $url, $request_info, $user_data, $time) {
+function callback_functn($response, $url, $request_info, $user_data, $time, $error) {
     $time; //how long the request took in milliseconds (float)
     $request_info; //returned by curl_getinfo($ch)
+    
+    if( $response ) {
+        // Start your work with requested data
+    }
+    else {
+        var_dump($error); // check your error for THIS request
+    }
 }
 ```
 
