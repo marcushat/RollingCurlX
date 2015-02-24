@@ -28,7 +28,7 @@ $post_data = ['user' => 'bob', 'token' => 'dQw4w9WgXcQ']; //set to NULL if not u
 $user_data = ['foo', $whatever];
 $options = [CURLOPT_FOLLOWLOCATION => false];
 
-$RCX->addRequest($url, $post_data, 'callback_functn' $user_data, $options, $headers);
+$RCX->addRequest($url, $post_data, 'callback_functn', $user_data, $options, $headers);
 ```
 
 The callback function should look like this:
