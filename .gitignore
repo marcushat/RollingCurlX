@@ -1,0 +1,7 @@
+*.kdev4
+*.diff
+composer.phar
+vendor/
+.*~
+.*-swp
+.directory
