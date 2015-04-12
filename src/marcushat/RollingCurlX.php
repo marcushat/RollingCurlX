@@ -1,4 +1,6 @@
 <?php
+
+namespace marcushat;
 /*
 **  RollingCurlX - cURL-Multi wrapper class
 **  URL: http://github.com/marcushat/RollingCurlX
