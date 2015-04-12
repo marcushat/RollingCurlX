@@ -1,5 +1,5 @@
 {
-	"name": "marcushat/RollingCurlX",
+	"name": "marcushat/rolling-curl-x",
 	"description": "Easy to use cURL Multi wrapper for PHP.",
 	"require": {
 		"php": ">=5.4.0"
