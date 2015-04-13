@@ -57,6 +57,17 @@ $RCX->setOptions([$curl_options]);
 //To do the same with http headers:
 $RCX->setHeaders(['Content-type: application/xml', 'Authorization: gfhjui']);
 ```
+### Test
+If you want to run some tests you can try different times for 1, 10 (default) and 20 (or any other number) concurrent requests:
+
+```bash
+$ time ./tests/test.php 1
+
+$ time ./tests/test.php
+
+$ time ./tests/test.php 20
+```
+
 
 ### Issues
 If you find any issues please let me know.
