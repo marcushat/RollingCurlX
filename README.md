@@ -11,6 +11,20 @@ MIT
 
 for PHP 5.4+
 
+## Installation
+
+Add `marcushat/rolling-curl-x` to `composer.json`.
+```
+"marcushat/rolling-curl-x": "dev-master"
+```
+
+Run `composer update` to pull down the latest version of LastfmApio.
+
+or alternatively, run
+```
+$ composer require marcushat/rolling-curl-x dev-master
+```
+
 ##How to Use
 Using this class is very easy.
 
@@ -57,6 +71,17 @@ $RCX->setOptions([$curl_options]);
 //To do the same with http headers:
 $RCX->setHeaders(['Content-type: application/xml', 'Authorization: gfhjui']);
 ```
+### Test
+If you want to run some tests you can try different times for 1, 10 (default) and 20 (or any other number) concurrent requests:
+
+```bash
+$ time ./tests/test.php 1
+
+$ time ./tests/test.php
+
+$ time ./tests/test.php 20
+```
+
 
 ### Issues
 If you find any issues please let me know.
