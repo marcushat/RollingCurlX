@@ -11,6 +11,20 @@ MIT
 
 for PHP 5.4+
 
+## Installation
+
+Add `marcushat/rolling-curl-x` to `composer.json`.
+```
+"marcushat/rolling-curl-x": "dev-master"
+```
+
+Run `composer update` to pull down the latest version of LastfmApio.
+
+or alternatively, run
+```
+$ composer require marcushat/rolling-curl-x dev-master
+```
+
 ##How to Use
 Using this class is very easy.
 
