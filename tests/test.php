@@ -22,6 +22,7 @@ require dirname(__DIR__) . '/vendor/autoload.php'; // Autoload files using Compo
 use marcushat\RollingCurlX;
 
 $base_url = 'http://www.freecurrencyconverterapi.com/api/v3/';
+$max_currencies = 30;
 $currencies = array();
 
 if (isset($argv[1]) && is_numeric($argv[1])) {
@@ -40,17 +41,12 @@ echo "Using $max_requests concurrent requests at max." . PHP_EOL;
 $rolling_curl = new RollingCurlX($max_requests);
 $rolling_curl->setOptions($curl_options);
 
-
-// Retrieve currencies
-$currencies = $rolling_curl->addRequest($base_url . 'currencies', NULL, 'process_currencies');
+// Retrieve available currencies, $currencies is set as global on the callback so it'll get filled.
+$rolling_curl->addRequest($base_url . 'currencies', NULL, 'process_currencies');
 $rolling_curl->execute();
 
-// After running 'execute' the number of max_requests gets overwritten to the number of actual requests so reset it.
-$rolling_curl->setMaxConcurrent($max_requests);
-$rolling_curl->setOptions($curl_options);
 
-
-for($i = 0; $i < 20; $i++) {
+for($i = 0; $i < $max_currencies; $i++) {
 	$currency = array_rand($currencies);
 	$user_data = array("1€ in $currency", $currency);
 	$search_url = $base_url . 'convert?q=EUR_'.$currency. '&compact=y';
@@ -66,7 +62,7 @@ $rolling_curl->execute();
 
 // Process the first call
 function process_currencies($response, $url, $request_info, $user_data, $time) {
-	global $currencies;
+	global $currencies, $max_currencies;
 
 	if ($request_info['http_code'] !== 200) {
 		print "Fetch error {$request_info['http_code']} for '$url'\n";
@@ -81,7 +77,7 @@ function process_currencies($response, $url, $request_info, $user_data, $time) {
 	}
 
 	$currencies = isset($currencies['results']) ? $currencies['results'] : array();
-	echo "Total of " . count($currencies) . " currencies found." . PHP_EOL;
+	echo "Total of " . count($currencies) . " currencies found, processing $max_currencies." . PHP_EOL;
 }
 
 // This function gets called back for each request that completes
