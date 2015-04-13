@@ -72,14 +72,15 @@ Class RollingCurlX {
 
 	//Execute the request queue
 	public function execute() {
+		$max_concurrent = $this->_maxConcurrent;
 		if(count($this->requests) < $this->_maxConcurrent) {
-			$this->_maxConcurrent = count($this->requests);
+			$max_concurrent = count($this->requests);
 		}
 		//the request map that maps the request queue to request curl handles
 		$requests_map = [];
 		$multi_handle = curl_multi_init();
 		//start processing the initial request queue
-		for($i = 0; $i < $this->_maxConcurrent; $i++) {
+		for($i = 0; $i < $max_concurrent; $i++) {
 			$ch = curl_init();
 
 			$request =& $this->requests[$i];
