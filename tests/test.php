@@ -11,10 +11,10 @@ require dirname(__DIR__) . '/vendor/autoload.php'; // Autoload files using Compo
 /**
  * A test script for the RollingCurlX class
  *
- * This example fetches the value of €1 on different currencies through the freecurrencyconverterapi.com
+ * This script will fetch the value of €1 on different currencies through the freecurrencyconverterapi.com
  *
  * NOTE: freecurrencyconverterapi.com IS A FREE SERVICE, PLEASE, BE CONSIDERATE AND DON'T THROW TOO MANY REQUESTS
- * AGAINST THEIR SERVERS.
+ * 		AGAINST THEIR SERVERS.
  *
  * By Julio Foulquie <jfoulquie@gmail.com>, freely reusable.
  */
@@ -33,7 +33,7 @@ if (isset($argv[1]) && is_numeric($argv[1])) {
 $curl_options = array(
     CURLOPT_SSL_VERIFYPEER => FALSE,
     CURLOPT_SSL_VERIFYHOST => FALSE,
-    CURLOPT_USERAGENT, 'RollingCurlX test script',
+    CURLOPT_USERAGENT, '[RollingCurlX test script] - [!!!!! Ban this user agent if it becomes a hassle on your server !!!!!!]',
 );
 
 echo "Using $max_requests concurrent requests at max." . PHP_EOL;
@@ -46,11 +46,12 @@ $currencies = $rolling_curl->addRequest($base_url . 'currencies', NULL, 'process
 $rolling_curl->execute();
 
 // After running 'execute' the number of max_requests gets overwritten to the number of actual requests so reset it.
-///TODO: Fix this on the class, _maxConcurrent should go back to its original value after an 'execute' call.
 $rolling_curl->setMaxConcurrent($max_requests);
 $rolling_curl->setOptions($curl_options);
 
-foreach ($currencies as $currency => $data) {
+
+for($i = 0; $i < 20; $i++) {
+	$currency = array_rand($currencies);
 	$user_data = array("1€ in $currency", $currency);
 	$search_url = $base_url . 'convert?q=EUR_'.$currency. '&compact=y';
 	$rolling_curl->addRequest($search_url, NULL, 'on_request_done', $user_data);
@@ -63,6 +64,7 @@ $rolling_curl->execute();
  * CALLBACKS
  */
 
+// Process the first call
 function process_currencies($response, $url, $request_info, $user_data, $time) {
 	global $currencies;
 
