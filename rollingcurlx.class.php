@@ -8,6 +8,7 @@
         https://github.com/marcushat/RollingCurlX
 */
 
+
 Class RollingCurlX {
     private $_maxConcurrent = 0; //max. number of simultaneous connections allowed
     private $_options = []; //shared cURL options
