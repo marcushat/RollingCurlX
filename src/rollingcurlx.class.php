@@ -236,12 +236,12 @@ Class RollingCurlX {
 
 
     private function addTimer(array &$request) { //adds timer object to request
-        $request['timer'] = new ScriptTimer;
+        $request['timer'] = microtime(true);
         $request['time'] = false; //default if not overridden by time later
     }
 
     private function stopTimer(array &$request) {
-        $elapsed = $request['time'] = $request['timer']->stop();
+        $elapsed = $request['time'] = microtime(true) - $request['timer'];
         unset($request['timer']);
         return $elapsed;
     }
