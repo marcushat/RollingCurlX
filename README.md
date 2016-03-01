@@ -1,4 +1,4 @@
-![RollingCurlX](http://i.imgur.com/LG2S2qE.png?1)
+![RollingCurlX](https://raw.githubusercontent.com/marcushat/RollingCurlX/master/logo/banner.png)
 
 Rolling Curl X is a fork of Rolling Curl wrapper cURL Multi. It aims at making concurrent http requests in PHP as easy as possible.
 
