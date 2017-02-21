@@ -1,4 +1,4 @@
-<?php
+<?php namespace marcushat;
 /*
         ---------- RollingCurlX 3.0.2 -----------
         an easy to use curl_multi wrapper for php
