@@ -43,7 +43,7 @@ Class RollingCurlX {
 
     public function setTimeout($timeout) { //in milliseconds
         if($timeout > 0) {
-            $this->_timeout = $timeout/1000; //to seconds
+            $this->_timeout = $timeout; //converted to ms when used
         }
     }
 
@@ -86,15 +86,16 @@ Class RollingCurlX {
 
     //Execute the request queue
     public function execute() {
-        if(count($this->requests) < $this->_maxConcurrent) {
-            $this->_maxConcurrent = count($this->requests);
-        }
+        //limit initial parallel requests to _maxConcurrent and don't overwrite _maxConcurrent.
+        $init_request_count = (count($this->requests) > $this->_maxConcurrent) 
+                                ? $this->_maxConcurrent 
+                                : count($this->requests);
         //the request map that maps the request queue to request curl handles
         $requests_map = [];
         $multi_handle = curl_multi_init();
 
         //start processing the initial request queue
-        for($i = 0; $i < $this->_maxConcurrent; $i++) {
+        for($i = 0; $i < $init_request_count; $i++) {
             $this->init_request($i, $multi_handle, $requests_map);
         }
 
@@ -201,7 +202,7 @@ Class RollingCurlX {
         $callback = $request['callback'];
         $options = $request['options'];
 
-        if($response && (isset($this->_options[CURLOPT_HEADER]) || isset($options[CURLOPT_HEADER]))) {
+        if($response && (!empty($this->_options[CURLOPT_HEADER]) || !empty($options[CURLOPT_HEADER]))) {
             $k = intval($request_info['header_size']);
             $request_info['response_header'] = substr($response, 0, $k);
             $response = substr($response, $k);
@@ -215,7 +216,7 @@ Class RollingCurlX {
         if($callback) {
             call_user_func($callback, $response, $url, $request_info, $user_data, $time);
         }
-        $request = NULL; //free up memory now just incase response was large
+        unset($request); //free up memory now just incase response was large (unset recommended over null setting)
     }
 
 

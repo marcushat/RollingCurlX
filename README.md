@@ -2,6 +2,7 @@
 
 Rolling Curl X is a fork of Rolling Curl wrapper cURL Multi. It aims at making concurrent http requests in PHP as easy as possible.
 
+### Issues 19 and 20 fixed in this version plus proper fix of closed issue 9.
 
 ####License
 MIT
