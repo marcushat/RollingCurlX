@@ -41,9 +41,9 @@ Class RollingCurlX {
         $this->_callback = $callback;
     }
 
-    public function setTimeout($timeout) { //in milliseconds
+    public function setTimeout($timeout) {
         if($timeout > 0) {
-            $this->_timeout = $timeout/1000; //to seconds
+            $this->_timeout = $timeout;
         }
     }
 
