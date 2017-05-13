@@ -1,13 +1,12 @@
 <?php
 /*
-        ---------- RollingCurlX 1.0.0 -----------
+        ---------- RollingCurlX 2.0.0 -----------
         an easy to use curl_multi wrapper for php
 
-            Copyright (c) 2015 Marcus Leath
+            Copyright (c) 2015-2017 Marcus Leath
                     License: MIT
         https://github.com/marcushat/RollingCurlX
 */
-
 
 Class RollingCurlX {
     private $_maxConcurrent = 0; //max. number of simultaneous connections allowed
@@ -43,7 +42,7 @@ Class RollingCurlX {
 
     public function setTimeout($timeout) { //in milliseconds
         if($timeout > 0) {
-            $this->_timeout = $timeout/1000; //to seconds
+            $this->_timeout = $timeout;
         }
     }
 
@@ -140,8 +139,11 @@ Class RollingCurlX {
         $options[CURLOPT_RETURNTRANSFER] = true;
 
         $options[CURLOPT_NOSIGNAL] = 1;
-        $options[CURLOPT_CONNECTTIMEOUT] = max(1, $this->_timeout/1000); //minimum of 1 second
-        $options[CURLOPT_TIMEOUT] = $this->_timeout/1000;
+
+        $options[CURLOPT_CONNECTTIMEOUT_MS] = $this->_timeout; //minimum of 1 second
+        $options[CURLOPT_TIMEOUT_MS] = $this->_timeout;
+        unset($options[CURLOPT_CONNECTTIMEOUT]);
+        unset($options[CURLOPT_TIMEOUT]);
 
         if($url) {
             $options[CURLOPT_URL] = $url;
@@ -152,7 +154,7 @@ Class RollingCurlX {
         }
 
         // enable POST method and set POST parameters
-        if($post_data) {
+        if($post_data !== null) {
             $options[CURLOPT_POST] = 1;
             $options[CURLOPT_POSTFIELDS] = is_array($post_data)? http_build_query($post_data) : $post_data;
         }
@@ -165,7 +167,9 @@ Class RollingCurlX {
         $this->addTimer($request);
 
         $ch = curl_init();
-        $opts_set = curl_setopt_array($ch, $this->buildOptions($request));
+        $options = $this->buildOptions($request);
+        $request['options_set'] = $options; //merged options
+        $opts_set = curl_setopt_array($ch, $options);
         if(!$opts_set) {
             echo 'options not set';
             exit;
@@ -185,7 +189,7 @@ Class RollingCurlX {
 
         $request_info = curl_getinfo($ch);
         $request_info['curle'] = $completed['result'];
-        $request_info['curle_msg'] = $this->curle_msgs[$completed['result']];
+        $request_info['curle_msg'] = isset($this->curle_msgs[$completed['result']]) ? $this->curle_msgs[$completed['result']] : curl_strerror($completed['result']);
         $request_info['handle'] = $ch;
         $request_info['time'] = $time = $this->stopTimer($request); //record request time
         $request_info['url_raw'] = $url = $request['url'];
@@ -199,9 +203,9 @@ Class RollingCurlX {
 
         //get request info
         $callback = $request['callback'];
-        $options = $request['options'];
+        $options = $request['options_set'];
 
-        if($response && (isset($this->_options[CURLOPT_HEADER]) || isset($options[CURLOPT_HEADER]))) {
+        if($response && !empty($options[CURLOPT_HEADER])) {
             $k = intval($request_info['header_size']);
             $request_info['response_header'] = substr($response, 0, $k);
             $response = substr($response, $k);
@@ -220,7 +224,7 @@ Class RollingCurlX {
 
 
     private function check_for_timeouts($mh) {
-        $now = microtime($true);
+        $now = microtime(true);
         $request_map = $this->_request_map;
         $requests = $this->_request_map;
         foreach($request_maps as $ch_hash => $request_num) {
@@ -236,12 +240,13 @@ Class RollingCurlX {
 
 
     private function addTimer(array &$request) { //adds timer object to request
-        $request['timer'] = microtime(true);
+        $request['timer'] = microtime(true); //start time
         $request['time'] = false; //default if not overridden by time later
     }
 
     private function stopTimer(array &$request) {
-        $elapsed = $request['time'] = microtime(true) - $request['timer'];
+        $elapsed = $request['timer'] - microtime(true);
+        $request['time'] = $elapsed;
         unset($request['timer']);
         return $elapsed;
     }
