@@ -27,16 +27,12 @@ $url = 'http://www.google.com/search?q=apples';
 $post_data = ['user' => 'bob', 'token' => 'dQw4w9WgXcQ']; //set to NULL if not using POST
 $user_data = ['foo', $whatever];
 $options = [CURLOPT_FOLLOWLOCATION => false];
-
-$RCX->addRequest($url, $post_data, 'callback_functn', $user_data, $options, $headers);
-```
-
-The callback function should look like this:
-```php
 function callback_functn($response, $url, $request_info, $user_data, $time) {
     $time; //how long the request took in milliseconds (float)
-    $request_info; //returned by curl_getinfo($ch)
+    $request_info; //array returned by curl_getinfo($ch), plus a couple extras
 }
+
+$RCX->addRequest($url, $post_data, 'callback_functn', $user_data, $options, $headers);
 ```
 
 Send the requests. Blocks until all requests complete or timeout.
