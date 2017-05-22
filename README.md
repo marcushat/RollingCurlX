@@ -7,7 +7,7 @@ Rolling Curl X is a fork of Rolling Curl wrapper cURL Multi. It aims at making c
 MIT
 
 #### Version
-1.0.0
+3.0.0
 
 for PHP 5.4+
 

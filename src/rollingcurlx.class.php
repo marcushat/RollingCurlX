@@ -1,6 +1,6 @@
 <?php
 /*
-        ---------- RollingCurlX 2.0.0 -----------
+        ---------- RollingCurlX 3.0.0 -----------
         an easy to use curl_multi wrapper for php
 
             Copyright (c) 2015-2017 Marcus Leath
@@ -9,6 +9,8 @@
 */
 
 Class RollingCurlX {
+    private $_curl_version;
+
     private $_maxConcurrent = 0; //max. number of simultaneous connections allowed
     private $_options = []; //shared cURL options
     private $_headers = []; //shared cURL request headers
@@ -16,8 +18,11 @@ Class RollingCurlX {
     private $_timeout = 5000; //all requests must be completed by this time
     public $requests = []; //request_queue
 
+
     function __construct($max_concurrent = 10) {
         $this->setMaxConcurrent($max_concurrent);
+
+        $this->_curl_version = curl_version()['version'];
     }
 
     public function setMaxConcurrent($max_requests) {
@@ -85,16 +90,16 @@ Class RollingCurlX {
 
     //Execute the request queue
     public function execute() {
-        if(count($this->requests) < $this->_maxConcurrent) {
-            $this->_maxConcurrent = count($this->requests);
-        }
         //the request map that maps the request queue to request curl handles
         $requests_map = [];
         $multi_handle = curl_multi_init();
+        $num_outstanding = 0;
 
         //start processing the initial request queue
-        for($i = 0; $i < $this->_maxConcurrent; $i++) {
+        $num_initial_requests = min($this->_maxConcurrent, count($this->requests));
+        for($i = 0; $i < $num_initial_requests; $i++) {
             $this->init_request($i, $multi_handle, $requests_map);
+            $num_outstanding++;
         }
 
         do{
@@ -108,10 +113,15 @@ Class RollingCurlX {
             //a request is just completed, find out which one
             while($completed = curl_multi_info_read($multi_handle)) {
                 $this->process_request($completed, $multi_handle, $requests_map);
+                $num_outstanding--;
 
-                //add/start a new request to the request queue
-                if($i < count($this->requests) && isset($this->requests[$i])) { //if requests left
+                //try to add/start a new requests to the request queue
+                while(
+                    $num_outstanding < $this->_maxConcurrent && //under the limit
+                    $i < count($this->requests) && isset($this->requests[$i]) // requests left
+                ) {
                     $this->init_request($i, $multi_handle, $requests_map);
+                    $num_outstanding++;
                     $i++;
                 }
             }
@@ -140,10 +150,17 @@ Class RollingCurlX {
 
         $options[CURLOPT_NOSIGNAL] = 1;
 
-        $options[CURLOPT_CONNECTTIMEOUT_MS] = $this->_timeout; //minimum of 1 second
-        $options[CURLOPT_TIMEOUT_MS] = $this->_timeout;
-        unset($options[CURLOPT_CONNECTTIMEOUT]);
-        unset($options[CURLOPT_TIMEOUT]);
+        if(version_compare($this->_curl_version, '7.16.2') >= 0) {
+            $options[CURLOPT_CONNECTTIMEOUT_MS] = $this->_timeout;
+            $options[CURLOPT_TIMEOUT_MS] = $this->_timeout;
+            unset($options[CURLOPT_CONNECTTIMEOUT]);
+            unset($options[CURLOPT_TIMEOUT]);
+        } else {
+            $options[CURLOPT_CONNECTTIMEOUT] = round($this->_timeout / 1000);
+            $options[CURLOPT_TIMEOUT] = round($this->_timeout / 1000);
+            unset($options[CURLOPT_CONNECTTIMEOUT_MS]);
+            unset($options[CURLOPT_TIMEOUT_MS]);
+        }
 
         if($url) {
             $options[CURLOPT_URL] = $url;
