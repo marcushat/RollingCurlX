@@ -9,7 +9,8 @@ MIT
 #### Version
 3.0.0
 
-for PHP 5.4+
+#### Requirements
+PHP 5.4+
 
 ## How to Use
 Using this class is very easy.
