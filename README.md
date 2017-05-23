@@ -11,7 +11,7 @@ MIT
 
 for PHP 5.4+
 
-##How to Use
+## How to Use
 Using this class is very easy.
 
 First initialize class with the maximum number of concurrent requests you want open at a time.
