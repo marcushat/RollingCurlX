@@ -158,8 +158,6 @@ Class RollingCurlX {
         } else {
             $options[CURLOPT_CONNECTTIMEOUT] = round($this->_timeout / 1000);
             $options[CURLOPT_TIMEOUT] = round($this->_timeout / 1000);
-            unset($options[CURLOPT_CONNECTTIMEOUT_MS]);
-            unset($options[CURLOPT_TIMEOUT_MS]);
         }
 
         if($url) {
