@@ -10,7 +10,7 @@
 
 Class RollingCurlX {
     private $_curl_version;
-
+    private $_handles = []; // reusable cURL handles
     private $_maxConcurrent = 0; //max. number of simultaneous connections allowed
     private $_options = []; //shared cURL options
     private $_headers = []; //shared cURL request headers
@@ -131,6 +131,10 @@ Class RollingCurlX {
 
         $this->reset();
         curl_multi_close($multi_handle);
+
+        while( ( $ch = array_pop($this->_handles) ) ) {
+            curl_close($ch);
+        }
     }
 
 
@@ -158,8 +162,6 @@ Class RollingCurlX {
         } else {
             $options[CURLOPT_CONNECTTIMEOUT] = round($this->_timeout / 1000);
             $options[CURLOPT_TIMEOUT] = round($this->_timeout / 1000);
-            unset($options[CURLOPT_CONNECTTIMEOUT_MS]);
-            unset($options[CURLOPT_TIMEOUT_MS]);
         }
 
         if($url) {
@@ -183,7 +185,7 @@ Class RollingCurlX {
         $request =& $this->requests[$request_num];
         $this->addTimer($request);
 
-        $ch = curl_init();
+        $ch = sizeof($this->_handles) ? array_pop($this->_handles) : curl_init();
         $options = $this->buildOptions($request);
         $request['options_set'] = $options; //merged options
         $opts_set = curl_setopt_array($ch, $options);
@@ -231,6 +233,7 @@ Class RollingCurlX {
         //remove completed request and its curl handle
         unset($requests_map[$ch_hash]);
         curl_multi_remove_handle($multi_handle, $ch);
+        $this->_handles[] = $ch;
 
         //call the callback function and pass request info and user data to it
         if($callback) {
