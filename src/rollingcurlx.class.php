@@ -1,6 +1,6 @@
 <?php
 /*
-        ---------- RollingCurlX 3.0.0 -----------
+        ---------- RollingCurlX 3.0.1 -----------
         an easy to use curl_multi wrapper for php
 
             Copyright (c) 2015-2017 Marcus Leath
@@ -240,12 +240,10 @@ Class RollingCurlX {
     }
 
 
-    private function check_for_timeouts($mh) {
+    private function check_for_timeouts($mh) { //DO NOT USE!!! Not implemented yet.
         $now = microtime(true);
-        $request_map = $this->_request_map;
-        $requests = $this->_request_map;
-        foreach($request_maps as $ch_hash => $request_num) {
-            $request = $requests[$request_num];
+        $requests = $this->_requests;
+        foreach($requests as $request) {
             $timeout = $request->timeout;
             $start_time = $request->start_time;
             $ch = $request->handle;
