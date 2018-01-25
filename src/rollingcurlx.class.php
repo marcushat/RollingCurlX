@@ -1,6 +1,6 @@
 <?php
 /*
-        ---------- RollingCurlX 3.0.0 -----------
+        ---------- RollingCurlX 3.0.1 -----------
         an easy to use curl_multi wrapper for php
 
             Copyright (c) 2015-2017 Marcus Leath
