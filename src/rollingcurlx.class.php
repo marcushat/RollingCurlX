@@ -1,6 +1,6 @@
 <?php
 /*
-        ---------- RollingCurlX 3.0.1 -----------
+        ---------- RollingCurlX 3.0.2 -----------
         an easy to use curl_multi wrapper for php
 
             Copyright (c) 2015-2017 Marcus Leath
@@ -260,7 +260,7 @@ Class RollingCurlX {
     }
 
     private function stopTimer(array &$request) {
-        $elapsed = $request['timer'] - microtime(true);
+        $elapsed = microtime(true) - $request['timer'];
         $request['time'] = $elapsed;
         unset($request['timer']);
         return $elapsed;
