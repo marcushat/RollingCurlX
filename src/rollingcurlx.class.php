@@ -265,7 +265,7 @@ Class RollingCurlX {
     }
 
     private function stopTimer(array &$request) {
-        $elapsed = $request['timer'] - microtime(true);
+        $elapsed = microtime(true) - $request['timer'];
         $request['time'] = $elapsed;
         unset($request['timer']);
         return $elapsed;
