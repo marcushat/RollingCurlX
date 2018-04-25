@@ -1,0 +1,23 @@
+{
+	"name": "marcushat/RollingCurlX",
+	"description": "Easy to use cURL Multi wrapper for PHP.",
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Marcus Hat"
+		},
+		{
+			"name": "Julio Foulquie",
+			"email": "jfoulquie@gmail.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"autoload": {
+        "psr-4": {
+            "marcushat\\": "src"
+        }
+	}
+}
