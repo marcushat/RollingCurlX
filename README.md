@@ -7,7 +7,7 @@ Rolling Curl X is a fork of Rolling Curl wrapper cURL Multi. It aims at making c
 MIT
 
 #### Version
-3.0.0
+3.0.3
 
 #### Requirements
 PHP 5.4+
@@ -47,6 +47,9 @@ There's more if you need it though...
 ```php
 //Set a timeout on all requests:
 $RCX->setTimeout(3000); //in milliseconds
+
+//Set a connection timeout on all requests:
+$RCX->setConnectTimeout(3000); //in milliseconds
 
 //To set options for all requests(will be overridden by individual request options):
 $RCX->setOptions([$curl_options]);
