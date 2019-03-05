@@ -1,6 +1,6 @@
 <?php
 /*
-        ---------- RollingCurlX 3.0.2 -----------
+        ---------- RollingCurlX 3.0.3 -----------
         an easy to use curl_multi wrapper for php
 
             Copyright (c) 2015-2017 Marcus Leath
@@ -16,6 +16,7 @@ Class RollingCurlX {
     private $_headers = []; //shared cURL request headers
     private $_callback = NULL; //default callback
     private $_timeout = 5000; //all requests must be completed by this time
+    private $_connect_timeout = 5000; //all connections must be completed by this time
     public $requests = []; //request_queue
 
 
@@ -48,6 +49,12 @@ Class RollingCurlX {
     public function setTimeout($timeout) { //in milliseconds
         if($timeout > 0) {
             $this->_timeout = $timeout;
+        }
+    }
+
+    public function setConnectTimeout($connect_timeout) { //in milliseconds
+        if($connect_timeout > 0) {
+            $this->_connect_timeout = $connect_timeout;
         }
     }
 
@@ -151,12 +158,12 @@ Class RollingCurlX {
         $options[CURLOPT_NOSIGNAL] = 1;
 
         if(version_compare($this->_curl_version, '7.16.2') >= 0) {
-            $options[CURLOPT_CONNECTTIMEOUT_MS] = $this->_timeout;
+            $options[CURLOPT_CONNECTTIMEOUT_MS] = $this->_connect_timeout;
             $options[CURLOPT_TIMEOUT_MS] = $this->_timeout;
             unset($options[CURLOPT_CONNECTTIMEOUT]);
             unset($options[CURLOPT_TIMEOUT]);
         } else {
-            $options[CURLOPT_CONNECTTIMEOUT] = round($this->_timeout / 1000);
+            $options[CURLOPT_CONNECTTIMEOUT] = round($this->_connect_timeout / 1000);
             $options[CURLOPT_TIMEOUT] = round($this->_timeout / 1000);
             unset($options[CURLOPT_CONNECTTIMEOUT_MS]);
             unset($options[CURLOPT_TIMEOUT_MS]);
